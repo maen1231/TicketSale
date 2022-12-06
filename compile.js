@@ -1,8 +1,11 @@
-const path = require("path");
-const fs = require("fs");
-const solc = require("solc");
-const ecomPath = path.resolve(__dirname, "contracts", "TicketSale.sol");
-const source = fs.readFileSync(ecomPath, "utf8");
+const path = require('path');
+const fs = require('fs');
+const solc = require('solc');
+//const solc = require('solc@0.4.17');
+
+const ticketPath = path.resolve(__dirname, 'contracts', 'TicketSale.sol');
+const source = fs.readFileSync(ticketPath, 'utf8');
+
 let input = {
   language: "Solidity",
   sources: {
@@ -18,9 +21,18 @@ let input = {
     },
   },
 };
+
+// const output = solc.compile(output, 1);
 const output = JSON.parse(solc.compile(JSON.stringify(input)));
-console.log(output);
-console.log(output.contracts["TicketSale.sol"].TicketSale);
-const bytecode =
-  output.contracts["TicketSale.sol"].TicketSale.evm.bytecode.object;
-console.log(bytecode);
+//console.log(output)
+//console.log(output.contracts["Inbox.sol"].Inbox);
+//onst bytecode = output.contracts['Ecommerce.sol'].Inbox.evm.bytecode.object;
+//console.log(bytecode);
+const contracts = output.contracts["TicketSale.sol"];
+console.log(contracts.TicketSale);
+
+for (let contractName in contracts) {
+    const contract = contracts[contractName];
+    module.exports= {"abi":contract.abi,"bytecode":contract.evm.bytecode.object};
+    //console.log(JSON.stringify(contract.abi));
+}
