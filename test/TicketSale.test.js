@@ -42,6 +42,12 @@ describe("TicketSale", () => {
 
     TicketSale.methods
     .acceptSwap(accounts[2]).send({from: accounts[1], gasPrice: 1500000, gas: 470000});
+
+    const ticketId1 = await TicketSale.methods.getTicketOf(accounts[1]).call();
+    const ticketId2 = await TicketSale.methods.getTicketOf(accounts[2]).call();
+
+    assert(ticketId1 == 3);
+    assert(ticketId2 == 2);
   });
 
 
