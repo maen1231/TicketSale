@@ -5,7 +5,7 @@ contract TicketSale {
 
     // <contract_variables>
     
-    address private owner;
+    //address private owner;
     mapping (address => uint) tickets;
     mapping (uint => address) ticketsSold;
     uint numTickets;
@@ -16,10 +16,12 @@ contract TicketSale {
     // </contract_variables>
 
     
-    constructor(uint numTickets, uint price) public {
-        numTickets = numTickets;
+    constructor(uint numTicket, uint p) public {
+        numTickets = numTicket;
         manager = msg.sender;
-        price = price;
+        price = p;
+        //for (uint i=1;i<=numTickets;i++)
+         //   ticketsSold[i]=address(0);
     }
     
 
@@ -27,11 +29,14 @@ contract TicketSale {
     function buyTicket(uint ticketId) public payable {
         bool success;
         bytes memory data;
+        //require(ticketId>0);
+        //require(ticketId<numTickets);
+        //require(ticketId >1);
         require(ticketId >= 1 && ticketId <= numTickets); // valid identifier
-        require (ticketsSold[ticketId] != address(0)); // not sold yet
+        require (ticketsSold[ticketId] == address(0)); // not sold yet
         require(tickets[msg.sender] == 0); // no ticket
         require(msg.value == price); // correct amount of Ether
-        (success, data)= owner.call{value: price}("");
+        (success, data)= manager.call{value: price}("");
         tickets[msg.sender] = ticketId;
         ticketsSold[ticketId] = msg.sender;
 
